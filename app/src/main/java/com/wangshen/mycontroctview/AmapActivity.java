@@ -16,6 +16,7 @@ import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.Projection;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -32,7 +33,7 @@ public class AmapActivity extends AppCompatActivity implements LocationSource,
     boolean useMoveToLocationWithMapMode = true;
 
     //自定义定位小蓝点的Marker
-    Marker locationMarker;
+    Marker locationMarker,marker;
 
     //坐标和经纬度转换工具
     Projection projection;
@@ -53,8 +54,24 @@ public class AmapActivity extends AppCompatActivity implements LocationSource,
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-
         aMap.setOnMapTouchListener(this);
+        aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+
+            }
+
+            @Override
+            public void onCameraChangeFinish(CameraPosition cameraPosition) {
+
+            }
+        });
+        aMap.setOnMapClickListener(new AMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                marker.setPosition(latLng);
+            }
+        });
     }
 
     @Override
@@ -83,6 +100,11 @@ public class AmapActivity extends AppCompatActivity implements LocationSource,
                     && amapLocation.getErrorCode() == 0) {
                 LatLng latLng = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
                 //展示自定义定位小蓝点
+                if (marker == null){
+                    marker = aMap.addMarker(new MarkerOptions().position(latLng)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.location_marker))
+                            .anchor(0.5f, 0.5f));
+                }
                 if(locationMarker == null) {
                     //首次定位
                     locationMarker = aMap.addMarker(new MarkerOptions().position(latLng)
@@ -128,7 +150,7 @@ public class AmapActivity extends AppCompatActivity implements LocationSource,
      */
     private void startMoveLocationAndMap(LatLng latLng) {
 
-        //将小蓝点提取到屏幕上
+      /*  //将小蓝点提取到屏幕上
         if(projection == null) {
             projection = aMap.getProjection();
         }
@@ -143,7 +165,7 @@ public class AmapActivity extends AppCompatActivity implements LocationSource,
         myCancelCallback.setTargetLatlng(latLng);
         //动画移动的时间，最好不要比定位间隔长，如果定位间隔2000ms 动画移动时间最好小于2000ms，可以使用1000ms
         //如果超过了，需要在myCancelCallback中进行处理被打断的情况
-        aMap.animateCamera(CameraUpdateFactory.changeLatLng(latLng),1000,myCancelCallback);
+        aMap.animateCamera(CameraUpdateFactory.changeLatLng(latLng),1000,myCancelCallback);*/
 
     }
     MyCancelCallback myCancelCallback = new MyCancelCallback();

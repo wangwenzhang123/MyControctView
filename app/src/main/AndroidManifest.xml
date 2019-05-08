@@ -40,7 +40,10 @@
         <activity android:name=".ViewActivity" />
         <activity android:name=".BannerActivity" />
         <activity android:name=".AmapActivity"></activity>
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="3dc064d6b42ec3ac9f75e29df9c26fdc">
+        <service android:name="com.amap.api.location.APSService">
+
+        </service>
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="ab01719f82fdd37eec1a2463f31cd191">
             //开发者申请的key
         </meta-data>
     </application>
